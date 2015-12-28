@@ -1,0 +1,109 @@
+<html>
+<head>
+	<title>hand-made-object</title>
+<style>
+body 
+{
+	background-color:black;
+	margin:0px;border:0px;
+	font-family:monospace;text-align: center;
+}
+#i {
+	position:absolute; margin:auto;
+	top:0;bottom:0;left:0;right:0;
+	max-width:100%;max-height:100%;
+}
+#a {
+	position:absolute;
+	top:72.4%;
+	left:31%;
+	width:17%;
+	height:5%;
+}
+#b {
+	position:absolute;
+	top:72.4%;
+	left:52%;
+	width:17%;
+	height:5%;
+}
+</style>
+</head>
+<body>
+	<img id="i" />
+	<div id="c">
+		<div id="a"></div>
+		<div id="b">500</div>
+	</div>
+</body>
+<script type="text/javascript" src="/scripts/jquery.min.js"></script>
+<script type="text/javascript" src="/scripts/jquery.fittext.js"></script>
+<script type="text/javascript" src="/scripts/jquery.url.min.js"></script>
+<script type="text/javascript" src="db.js"></script>
+<script type="text/javascript">
+
+function fail()
+{
+	window.location = "/";
+}
+
+function pad(n, width) {
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+}
+
+function init()
+{
+	var id = $.url('?id');
+	var uid = $.url('?uid');
+	
+	if (typeof id != "string" || typeof uid != "string")
+	{
+		return fail();
+	}
+
+	if (!db.hasOwnProperty(id))
+	{
+		return fail();
+	}
+	
+	var entry = db[id];	
+	if (entry.uid != uid)
+	{
+		return fail();
+	}
+	
+	var	style = entry.style;
+	var textColor = "#ef1e24";
+
+	if (style == "gold") textColor = "black";
+	if (id == 352) id = 1;
+	
+	$("#a").text(pad(id, 3));	
+	$("#i").attr("src", "/certificates/" + style + ".jpg");
+	$("#c").attr("style", "color:"+ textColor + ";");
+	
+	update();
+}
+
+function update()
+{
+	var image = $("#i");
+	$("#c").css({
+		'position': 'absolute',
+		'width': image.width(),
+		'height': image.height(),
+		'top': image.offset().top,
+		'left': image.offset().left
+	});
+	$("#a").fitText(0.2);
+	$("#b").fitText(0.2);
+}
+
+init();
+$(window).load(update);
+$(window).resize(update);
+$(document).ready(update);
+
+</script>
+</html>
